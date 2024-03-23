@@ -2,8 +2,23 @@
 const route = `https://swapi.dev/api/people/`; // mettre httpss pour provoquer une erreur de fetch
 const idPeople = 1; // mettre -1 pour provoquer une 404
 
+/**
+ * 
+ */
+const statusConfig = {
+  200: () => console.log("Tout est ok"),
+  404: (n) => console.log(`404 - Pas de donnée pour l'id ${n}`),
+  500: () => console.log("500 - rien ne va plus"),
+  default: () => console.log("Default...")
+}
+
 const handleResponse = async res => {
   console.log({res});
+  const {status} = res;
+
+  // appelle la fonction de gestion du status
+  (statusConfig[status] || statusConfig["default"])(idPeople);
+
   if (res.ok) {
     // si ok alors on va lire le json
     // c'est une méthode asynchrone et on veut attendre le résultat avant de continuer --> d'où le await
